@@ -1,0 +1,51 @@
+{
+    "inputPortDescriptors": [
+        {
+            "required": true,
+            "type": "directory",
+            "description": "Directory holding the .tif files that are the source images. Translations will be calculated from each of the .tif files in this folder to the corresponding files in the target_images.",
+            "name": "source_images"
+        },
+        {
+            "required": true,
+            "type": "directory",
+            "description": "Directory holding the .tif files that are the target images. Translations will be calculated to each of the .tif files in this folder from the corresponding files in the source_images.",
+            "name": "target_images"
+        },
+        {
+            "required": false,
+            "type": "string",
+            "description": "Number of max iterations to use in solving for the translation parameters. Larger values may result in better alignment, but will always result in slower task run times. Default: 1000.",
+            "name": "n_iter"
+        },
+        {
+            "required": false,
+            "type": "string",
+            "description": "The threshold used for determining convergence in solution of translation parameters. Smaller decimal values may result in better alignment, but will always result in slower task run times. Default: 1e-4.",
+            "name": "term_eps"
+        }
+
+    ],
+    "outputPortDescriptors": [
+        {
+            "required": true,
+            "type": "directory",
+            "description": "Directory holding output affine translation parameters for each input tif in source_images.",
+            "name": "data"
+        }
+    ],
+    "containerDescriptors": [{
+        "type": "DOCKER",
+        "command": "/opt/conda/envs/tiepoints/bin/python /scripts/calc_image_translations.py",
+        "properties": {
+            "image": "mgleason/calc_image_translations:latest"
+        }
+    }],
+    "name": "calc_image_translations",
+    "version": "0.0.4",
+    "description": "WARNING: THIS TASK IS EXPERIMENTAL AND HAS NOT BEEN ROBUSTLY TESTED. Given two folders of images in .tif format (source_images and target_images), this script calculates the affine translation paramters for aligning each tif from source_images to the corresponding (identically named) tif in target_images. For more information about this task, please contact Mike Gleason (michael.gleason@digitalglobe.com).",
+    "properties": {
+        "isPublic": false,
+        "timeout": 18000
+    }
+}
