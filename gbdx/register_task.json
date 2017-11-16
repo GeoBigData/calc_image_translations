@@ -27,7 +27,7 @@
         {
             "required": false,
             "type": "string",
-            "description": "Boolean that should be set to 'true' if inputs are provided as zip files instead of a directory of tifs. Default is false.",
+            "description": "Boolean that should be set to 'true' if inputs are provided as tar.gz archive files instead of a directory of tifs. Default is false.",
             "name": "inputs_are_zips"
 
         }
@@ -49,7 +49,7 @@
         }
     }],
     "name": "calc_image_translations",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "WARNING: THIS TASK IS EXPERIMENTAL AND HAS NOT BEEN ROBUSTLY TESTED. Given two folders of images in .tif format (source_images and target_images), this script calculates the affine translation paramters for aligning each tif from source_images to the corresponding (identically named) tif in target_images. For more information about this task, please contact Mike Gleason (michael.gleason@digitalglobe.com).",
     "properties": {
         "isPublic": false,
