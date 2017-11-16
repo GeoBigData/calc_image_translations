@@ -6,6 +6,19 @@ import image_registration
 import json
 import tqdm
 import rasterio
+import zipfile
+
+def bool_from_string(s):
+
+    if s.lower() == 'true':
+        b = True
+    elif s.lower() == 'false':
+        b = False
+    else:
+        raise ValueError("Unexpected value: {}. Could not convert to boolean".format(s))
+
+    return b
+
 
 def convert_type(var, f, expected_type):
 
@@ -117,12 +130,29 @@ def main():
         inputs = json.load(ports)
     n_iter = inputs.get('n_iter', '1000')
     term_eps = inputs.get('term_eps', '1e-4')
+    inputs_are_zips = inputs.get('inputs_are_zips', 'false')
     # convert the inputs to the correct dtypes
     n_iter = convert_type(n_iter, int, 'Integer')
     term_eps = convert_type(term_eps, float, 'Float')
+    inputs_are_zips = convert_type(inputs_are_zips, bool_from_string, 'Boolean')
 
     # make sure the input source images folder exists and contains tifs
     if os.path.exists(input_source_images):
+        if inputs_are_zips is True:
+            # get the zips
+            source_zips = [os.path.join(input_source_images, t) for t in glob.glob1(input_source_images, '*.zip')]
+            if len(source_zips) == 0:
+                raise ValueError("No files with .zip extension found in input data port 'source_images'")
+            elif len(source_zips) > 1:
+                raise ValueError("Multiple files with .zip extension found in input data port 'source_images'")
+            else:
+                source_zip = os.path.join(input_source_images, source_zips[0])
+            # unzip contents if provided as a zip
+            with zipfile.ZipFile(source_zip, 'r') as z:
+                z.extractall(input_source_images)
+            # remove the original zip file
+            os.remove(source_zip)
+        # after unzipping (or if unzipping wasn't necessary), confirm that there are tifs
         source_tifs = [os.path.join(input_source_images, t) for t in glob.glob1(input_source_images, '*.tif')]
         if len(source_tifs) == 0:
             raise ValueError("No files with .tif extension found in input data port 'source_images'")
@@ -131,6 +161,21 @@ def main():
 
     # make sure the input target images folder exists and contains tifs
     if os.path.exists(input_target_images):
+        if inputs_are_zips is True:
+            # get the zips
+            target_zips = [os.path.join(input_target_images, t) for t in glob.glob1(input_target_images, '*.zip')]
+            if len(target_zips) == 0:
+                raise ValueError("No files with .zip extension found in input data port 'target_images'")
+            elif len(target_zips) > 1:
+                raise ValueError("Multiple files with .zip extension found in input data port 'target_images'")
+            else:
+                target_zip = os.path.join(input_target_images, target_zips[0])
+            # unzip contents if provided as a zip
+            with zipfile.ZipFile(target_zip, 'r') as z:
+                z.extractall(input_target_images)
+            # remove the original zip file
+            os.remove(target_zip)
+            # after unzipping (or if unzipping wasn't necessary), confirm that there are tifs
         target_tifs = [os.path.join(input_target_images, t) for t in glob.glob1(input_target_images, '*.tif')]
         if len(target_tifs) == 0:
             raise ValueError("No files with .tif extension found in input data port 'target_images'")

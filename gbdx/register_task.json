@@ -23,6 +23,13 @@
             "type": "string",
             "description": "The threshold used for determining convergence in solution of translation parameters. Smaller decimal values may result in better alignment, but will always result in slower task run times. Default: 1e-4.",
             "name": "term_eps"
+        },
+        {
+            "required": false,
+            "type": "string",
+            "description": "Boolean that should be set to 'true' if inputs are provided as zip files instead of a directory of tifs. Default is false.",
+            "name": "inputs_are_zips"
+
         }
 
     ],
@@ -42,10 +49,10 @@
         }
     }],
     "name": "calc_image_translations",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "WARNING: THIS TASK IS EXPERIMENTAL AND HAS NOT BEEN ROBUSTLY TESTED. Given two folders of images in .tif format (source_images and target_images), this script calculates the affine translation paramters for aligning each tif from source_images to the corresponding (identically named) tif in target_images. For more information about this task, please contact Mike Gleason (michael.gleason@digitalglobe.com).",
     "properties": {
         "isPublic": false,
-        "timeout": 18000
+        "timeout": 36000
     }
 }
