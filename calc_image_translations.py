@@ -7,6 +7,7 @@ import json
 import tqdm
 import rasterio
 import zipfile
+import tarfile
 
 def bool_from_string(s):
 
@@ -140,15 +141,15 @@ def main():
     if os.path.exists(input_source_images):
         if inputs_are_zips is True:
             # get the zips
-            source_zips = [os.path.join(input_source_images, t) for t in glob.glob1(input_source_images, '*.zip')]
+            source_zips = [os.path.join(input_source_images, t) for t in glob.glob1(input_source_images, '*.tar.gz')]
             if len(source_zips) == 0:
-                raise ValueError("No files with .zip extension found in input data port 'source_images'")
+                raise ValueError("No files with .tar.gz extension found in input data port 'source_images'")
             elif len(source_zips) > 1:
-                raise ValueError("Multiple files with .zip extension found in input data port 'source_images'")
+                raise ValueError("Multiple files with .tar.gz extension found in input data port 'source_images'")
             else:
                 source_zip = os.path.join(input_source_images, source_zips[0])
             # unzip contents if provided as a zip
-            with zipfile.ZipFile(source_zip, 'r') as z:
+            with tarfile.open(source_zip, 'r') as z:
                 z.extractall(input_source_images)
             # remove the original zip file
             os.remove(source_zip)
@@ -163,15 +164,15 @@ def main():
     if os.path.exists(input_target_images):
         if inputs_are_zips is True:
             # get the zips
-            target_zips = [os.path.join(input_target_images, t) for t in glob.glob1(input_target_images, '*.zip')]
+            target_zips = [os.path.join(input_target_images, t) for t in glob.glob1(input_target_images, '*.tar.gz')]
             if len(target_zips) == 0:
-                raise ValueError("No files with .zip extension found in input data port 'target_images'")
+                raise ValueError("No files with .tar.gz extension found in input data port 'target_images'")
             elif len(target_zips) > 1:
-                raise ValueError("Multiple files with .zip extension found in input data port 'target_images'")
+                raise ValueError("Multiple files with .tar.gz extension found in input data port 'target_images'")
             else:
                 target_zip = os.path.join(input_target_images, target_zips[0])
             # unzip contents if provided as a zip
-            with zipfile.ZipFile(target_zip, 'r') as z:
+            with tarfile.open(target_zip, 'r') as z:
                 z.extractall(input_target_images)
             # remove the original zip file
             os.remove(target_zip)
